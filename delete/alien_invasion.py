@@ -100,6 +100,7 @@ class AlienInvasion:
     
     if pygame.sprite.spritecollideany(self.ship, self.aliens):
       self._ship_hit()
+    self._check_aliens_bottom()
         
   def _create_alien(self, x_position, y_position):
     new_alien = Alien(self)
@@ -147,6 +148,12 @@ class AlienInvasion:
     
     else:
       self.game_active = False
+      
+  def _check_aliens_bottom(self):
+    for alien in self.aliens.sprites():
+      if alien.rect.bottom >= self.settings.screen_height:
+        self._ship_hit()
+        break
 
   def _update_screen(self):
     self.screen.fill(self.settings.bg_color)
