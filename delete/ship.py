@@ -12,10 +12,18 @@ class Ship:
     
     self.rect.midbottom = self.screen_rect.midbottom
     
-    self.y = float(self.rect.y)
+    self.x = float(self.rect.x)
+    
+    self.moving_left = False
+    self.moving_right = False
     
   def update(self):
-    return
+    if self.moving_left and self.rect.left > self.screen_rect.left:
+      self.x -= self.settings.ship_speed
+    elif self.moving_right and self.rect.right <= self.screen_rect.right:
+      self.x += self.settings.ship_speed
+    
+    self.rect.x = self.x
   
   def blitme(self):
     self.screen.blit(self.image, self.rect)
