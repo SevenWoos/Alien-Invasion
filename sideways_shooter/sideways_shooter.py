@@ -115,6 +115,8 @@ class SidewaysShooter:
     # Look for alien-ship collisions.
     if pygame.sprite.spritecollideany(self.ship, self.aliens):
       self._ship_hit()
+    # Look for any aliens hitting the bottom(left) of the screen.
+    self._check_aliens_bottom()
         
   def _create_alien(self, x_position, y_position):
     """Create an alien and place it in the row."""
@@ -174,6 +176,14 @@ class SidewaysShooter:
     
     else:
       self.game_active = False
+      
+  def _check_aliens_bottom(self):
+    """Check if any aliens have reached the bottom(left) of the screen."""
+    for alien in self.aliens.sprites():
+      if alien.rect.left <= 0:
+        # Treat this the same as if the ship got hit.
+        self._ship_hit()
+        break
   
   def _update_screen(self):
     """Update images on the screen, and flip to the new screen."""
