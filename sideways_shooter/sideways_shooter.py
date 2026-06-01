@@ -82,6 +82,21 @@ class SidewaysShooter:
       if bullet.rect.left >= self.screen_rect.right:
         self.bullets.remove(bullet)
         
+    # Check for any bullets that have hit aliens.
+    self._check_bullet_alien_collisions()
+    
+  def _check_bullet_alien_collisions(self):
+    """Respond to bullet-alien collisions."""
+    # Remove any bullets and aliens that have collided.
+    collisions = pygame.sprite.groupcollide(
+      self.bullets, self.aliens, True, True
+    )
+    # Respawn new fleet when one is destroyed.
+    if not self.aliens:
+      # Destroy existing bullet sprites and create new fleet.
+      self.bullets.empty()
+      self._create_fleet()
+        
   def _update_aliens(self):
     """Check if fleet is at an edge, then update the poistions of all aliens in the fleet."""
     self._check_fleet_edges()
