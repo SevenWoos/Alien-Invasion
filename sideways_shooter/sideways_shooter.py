@@ -36,7 +36,7 @@ class SidewaysShooter:
     while True:
       self._check_events()
       self.ship.update()
-      self.aliens.update()
+      self._update_aliens()
       self._update_bullet()
       self._update_screen()
       self.clock.tick(60)
@@ -82,6 +82,11 @@ class SidewaysShooter:
       if bullet.rect.left >= self.screen_rect.right:
         self.bullets.remove(bullet)
         
+  def _update_aliens(self):
+    """Check if fleet is at an edge, then update the poistions of all aliens in the fleet."""
+    self._check_fleet_edges()
+    self.aliens.update()
+        
   def _create_alien(self, x_position, y_position):
     """Create an alien and place it in the row."""
     new_alien = Alien(self)
@@ -107,6 +112,19 @@ class SidewaysShooter:
       # Finished a row; reset y-value, and decrement x-value to next column.
       current_x -= 2 * alien_width
       current_y = alien_height
+      
+  def _check_fleet_edges(self):
+    """Respond appropriately if any aliens have reached the top or bottom edge."""
+    for alien in self.aliens.sprites():
+      if alien.check_edges():
+        self._change_fleet_direction()
+        break
+  
+  def _change_fleet_direction(self):
+    """Drop the entire fleet(left) and change the fleet's direction."""
+    for alien in self.aliens.sprites():
+      alien.rect.x -= self.settings.fleet_drop_speed
+    self.settings.fleet_direction *= -1
   
   def _update_screen(self):
     """Update images on the screen, and flip to the new screen."""
